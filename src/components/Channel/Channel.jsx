@@ -19,6 +19,7 @@ const Channel = ({user = null}) => {
 
     const inputRef = useRef();
     const bottomListRef = useRef();
+  
 
     useEffect(() => {
         // subscribe to query with onSnapshot
@@ -61,6 +62,7 @@ const Channel = ({user = null}) => {
         }
     }
 
+
     return (
         <>
             <ul>
@@ -69,7 +71,7 @@ const Channel = ({user = null}) => {
                 first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
               )
               ?.map(message => (
-                <li key={message.id} class="list-inline">
+                <li key={message.id} className="list-inline">
                   <Message {...message} />
                 </li>
               ))}
@@ -84,13 +86,13 @@ const Channel = ({user = null}) => {
                       type="text"
                       value={newMessage}
                       onChange={handleOnChange}
-                      class="form-control ml-5 mr-1"
+                      className="form-control ml-5 mr-1"
                       placeholder = "Type your message here..."
                   />
                   <button 
                     type="submit"
                     disabled={!newMessage}
-                    class="btn btn-outline-secondary mr-5"
+                    className="btn btn-dark mr-5"
                     >
                       Send
                   </button>
