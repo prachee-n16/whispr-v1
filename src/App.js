@@ -6,7 +6,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 import Button from './components/Button/Button'
-
+import Channel from './components/Channel/Channel';
 import {useAuthState} from './hooks';
 
 function App() {
@@ -46,12 +46,22 @@ function App() {
     }
   }
   
+  if (user) return <Channel user={user} />;
+
   return (
     <div className="App">
-      {/* Button to sign in with google */}
-      <Button onClick = {SignInGoogle}>
-        Sign in with Google
-      </Button>
+      {/* Log in/Log out component */}
+      {
+        user ? (
+          <>
+          <Button onClick={SignOutGoogle}>Sign Out</Button>
+          <p>Welcome to the chat!</p>
+          </>
+        )
+       : <Button onClick = {SignInGoogle}>Sign in with Google</Button>
+      }
+
+
     </div>
   );
 }
