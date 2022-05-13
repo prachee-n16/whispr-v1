@@ -26,27 +26,32 @@ const Message = ({
 
     return (
         <div>
-            <div>
-                {photoURL ? (
-                    <img
-                    src={photoURL}
-                    alt="Avatar"
-                    width={45}
-                    height={45}
-                    />
-                ) : null}
-                <div>
-                    <div>
-                    {displayName ? (
-                        <p>{displayName}</p>
-                    ) : null}
-                    {createdAt?.seconds ? (
-                        <span>
-                        {formatDate(new Date(createdAt.seconds * 1000))}
-                        </span>
-                    ) : null}
+            <div className='container'>
+                <div className='row mb-3'>
+                    <div className='col-1'>
+                        {photoURL ? (
+                            <img
+                            className="rounded rounded-circle d-block"
+                            src={photoURL}
+                            alt="Avatar"
+                            width={50}
+                            height={50}
+                            />
+                        ) : null}
                     </div>
-                    <p>{text}</p>
+
+                    <div className='col-11'>
+                        {displayName ? (
+                            <p className='mb-0'>{displayName}</p>
+                        ) : null}
+                        {createdAt?.seconds ? (
+                            <span className='text-muted align-text-top'>
+                            {formatDate(new Date(createdAt.seconds * 1000))}
+                            </span>
+                        ) : null}
+                        <p className='align-top mt-2'>{text}</p>
+                        
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import firebase from "firebase/compat/app";
 import Message from "../Message/Message";
 import { useFirestoreQuery } from '../../hooks';
 
+import './Channel.scss'
 const Channel = ({user = null}) => {
     const db = firebase.firestore();
     const query = db.collection('messages').orderBy('createdAt').limit(100);
@@ -31,10 +32,16 @@ const Channel = ({user = null}) => {
       
       return unsubscribe;
     }, [])
-    
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [inputRef]);
+
     const handleOnChange = e => {
-        setNewMessage(e.target.value);
-    }
+      setNewMessage(e.target.value);
+  }
 
     const handleOnSubmit = e => {
         e.preventDefault();
@@ -54,12 +61,6 @@ const Channel = ({user = null}) => {
         }
     }
 
-    useEffect(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }, [inputRef]);
-    
     return (
         <>
             <ul>
@@ -68,24 +69,34 @@ const Channel = ({user = null}) => {
                 first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
               )
               ?.map(message => (
-                <li key={message.id}>
+                <li key={message.id} class="list-inline">
                   <Message {...message} />
                 </li>
               ))}
             </ul>
-            <form onSubmit={handleOnSubmit}>
+            <div className="mb-4 text-light">iiii</div>
+            <div ref={bottomListRef} />
+
+            <form onSubmit={handleOnSubmit} className="mx-5 fixed-bottom bg-light pb-3 mt-5">
+              <div className="input-group mb-3">
                 <input
-                    ref={inputRef}
-                    type="text"
-                    value={newMessage}
-                    onChange={handleOnChange}
-                    placeholder = "Type your message here..."
-                />
-                <button 
+                      ref={inputRef}
+                      type="text"
+                      value={newMessage}
+                      onChange={handleOnChange}
+                      class="form-control ml-5 mr-1"
+                      placeholder = "Type your message here..."
+                  />
+                  <button 
                     type="submit"
-                    disabled={!newMessage}>
-                        Send
-                </button>
+                    disabled={!newMessage}
+                    class="btn btn-outline-secondary mr-5"
+                    >
+                      Send
+                  </button>
+              </div>
+                
+                
             </form>
         </>
     );

@@ -5,9 +5,14 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-import Button from './components/Button/Button'
+import SignInButton from './components/Button/SignInButton'
+import SignOutButton from './components/Button/SignOutButton'
+
 import Channel from './components/Channel/Channel';
+import Chat from './container/ChatApp/Chat'
 import {useAuthState} from './hooks';
+
+import Landing from './container/Landing/Landing'
 
 function App() {
   // Configuration of firebase project
@@ -21,20 +26,6 @@ function App() {
     measurementId: "G-H7KJPWZ859"
    });
 
-  // Logs in user using google account
-  const SignInGoogle = async () => {
-    //  get google provider object
-    const provider = new firebase.auth.GoogleAuthProvider();
-    // language needs to be set to what they preference
-    firebase.auth().useDeviceLanguage();
-    // Start logging in user
-    try {
-      await firebase.auth().signInWithPopup(provider);
-    } catch(error) {
-      console.log(error.message);
-    }
-  }
-
   //  Deals with user logging in part.
   const { user, initializing } = useAuthState(firebase.auth());
 
@@ -46,7 +37,7 @@ function App() {
     }
   }
   
-  if (user) return <Channel user={user} />;
+  // if (user) return <Channel user={user} />;
 
   return (
     <div className="App">
@@ -54,11 +45,25 @@ function App() {
       {
         user ? (
           <>
-          <Button onClick={SignOutGoogle}>Sign Out</Button>
-          <p>Welcome to the chat!</p>
+            <nav class="navbar navbar-light bg-light">
+              <span class="navbar-brand mb-0 h4 fw-bold px-4">whispr.</span>
+              <div className='d-flex justify-content-end'>
+                <SignOutButton onClick={SignOutGoogle}>Sign Out</SignOutButton>
+                <button className='d-flex justify-content-center align-items-center btn btn-dark py-2 px-2'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                    <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+                  </svg>
+                </button>
+              </div>
+            </nav>
+            <Chat/>
+            <Channel user={user} />
           </>
         )
-       : <Button onClick = {SignInGoogle}>Sign in with Google</Button>
+       : <div>
+          <Landing/>
+         </div>
+        
       }
 
 

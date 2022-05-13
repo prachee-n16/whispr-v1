@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Landing from './container/Landing/Landing'
 import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Landing />
+    <App />
   </React.StrictMode>
 );
 

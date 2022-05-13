@@ -9,7 +9,7 @@ import 'firebase/compat/firestore';
 
 import {useAuthState} from '../../hooks';
 
-import Button from '../../components/Button/Button'
+import Button from '../../components/Button/SignInButton'
 
 const Landing = () => {
     // Configuration of firebase project
