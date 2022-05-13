@@ -21,7 +21,7 @@ function App() {
     measurementId: "G-H7KJPWZ859"
    });
 
-  //  Logs in user using google account
+  // Logs in user using google account
   const SignInGoogle = async () => {
     //  get google provider object
     const provider = new firebase.auth.GoogleAuthProvider();

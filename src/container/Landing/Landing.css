@@ -1,0 +1,10 @@
+.divider:after,
+.divider:before {
+  content: "";
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 1px;
+  background: #eee;
+}
+/*# sourceMappingURL=Landing.css.map */
