@@ -8,7 +8,7 @@ const Channel = ({user = null}) => {
     const db = firebase.firestore();
     const query = db.collection('messages').orderBy('createdAt').limit(100);
     const [docs, setDocs] = useState([]);
-
+    
     const messagesRef = db.collection('messages');
     const messages = useFirestoreQuery(
         messagesRef.orderBy('createdAt', 'desc').limit(100)
@@ -71,10 +71,8 @@ const Channel = ({user = null}) => {
               )
               ?.map(message => (
                 <li key={message.id} className="list-inline">
-                  {console.log(message.id)}
                   <Message {...message} id={message.id}/>
-                 
-                  
+                  {console.log(message)}
                 </li>
               ))}
             </ul>

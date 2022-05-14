@@ -25,6 +25,7 @@ const Landing = () => {
 
     //  Deals with user logging in part.
     const { user, initializing } = useAuthState(firebase.auth());
+    
 
     // Logs in user using google account
     const SignInGoogle = async (event) => {
@@ -44,6 +45,7 @@ const Landing = () => {
   return (
     <section class="vh-100">
     <div class="container-fluid">
+    
       <div class="row">
         <div class="col-sm-6 text-black">
   

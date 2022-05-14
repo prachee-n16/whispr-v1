@@ -1,13 +1,17 @@
 import React from 'react'
 import { formatRelative } from 'date-fns';
 
+import { useState } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import './Message.scss'
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 
 var updateMessage = '';
+
 var selectedId = '';
+var selectedName = '';
+var selectedText = '';
 
 const formatDate = date => {
     let formattedDate = '';
@@ -26,7 +30,8 @@ const Message = ({
         text = '',
         displayName = '',
         photoURL = '',
-        id = ''
+        id = '',
+        uid = ''
     }) => {
         var message_id = id;
         
@@ -36,6 +41,7 @@ const Message = ({
         function handleDelete(e, id) {
             var docRef = firebase.firestore().collection("messages").doc(selectedId.toString());
             docRef.delete();
+            selectedId = 0;
         }
         
         function handleUpdate(e, updateMessages, id) {
@@ -44,11 +50,14 @@ const Message = ({
                 text: updateMessages
             })
             updateMessage = '';
+            selectedId = 0;
         }
 
         function handleUpdateID(e){
             selectedId = e.target.id.toString().slice(0, -3);
-            console.log(selectedId);
+            selectedName = document.getElementById(selectedId+"name").innerText
+            selectedText = document.getElementById(selectedId+"text").innerText
+            
         }
 
     return (
@@ -68,9 +77,10 @@ const Message = ({
                         
                     </div>
 
+
                     <div className='col-11' id='message'>
                         {displayName ? (
-                            <p className='mb-0'>{displayName}</p>
+                            <p className='mb-0' id={message_id+"name"}>{displayName}</p>
                         ) : null}
                         
                         <div class="position-relative top-0 float-end pb-5 dropdown dropleft">
@@ -87,7 +97,7 @@ const Message = ({
                             {formatDate(new Date(createdAt.seconds * 1000))}
                             </span>
                         ) : null}
-                        <p className='align-top mt-2'>{text}</p>
+                        <p className='align-top mt-2' id={message_id+"text"}>{text}</p>
                     </div>
                 </div>
             </div>
@@ -125,9 +135,9 @@ const Message = ({
                         <div class="modal-body">
                             <div class="input-group input-group-sm mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">@{displayName}</span>
+                                <span class="input-group-text" id="inputGroup-sizing-sm">@{selectedName}</span>
                             </div>
-                            <input type="text" placeholder={selectedId.valueOf()} class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(evt) => {updateMessage=evt.target.value;}}/>
+                            <input type="text" placeholder="Type your message here..." class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(evt) => {updateMessage=evt.target.value;}}/>
                             </div>
                         </div>
                         <div class="modal-footer">
