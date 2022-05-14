@@ -27,7 +27,8 @@ const Landing = () => {
     const { user, initializing } = useAuthState(firebase.auth());
 
     // Logs in user using google account
-    const SignInGoogle = async () => {
+    const SignInGoogle = async (event) => {
+        event.preventDefault();
         //  get google provider object
         const provider = new firebase.auth.GoogleAuthProvider();
         // language needs to be set to what they preference

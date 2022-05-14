@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "whispr-chatapp",
+    "staging": "whispr-chatapp"
+  },
+  "targets": {}
+}

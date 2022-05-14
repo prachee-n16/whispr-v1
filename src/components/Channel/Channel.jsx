@@ -15,11 +15,10 @@ const Channel = ({user = null}) => {
       );
 
     const [newMessage, setNewMessage] = useState('');
-    const { uid, displayName, photoURL } = user;
+    const { uid, displayName, photoURL, message_id } = user;
 
     const inputRef = useRef();
     const bottomListRef = useRef();
-  
 
     useEffect(() => {
         // subscribe to query with onSnapshot
@@ -54,7 +53,7 @@ const Channel = ({user = null}) => {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 uid,
                 displayName,
-                photoURL,
+                photoURL
             });
 
             setNewMessage('');
@@ -72,7 +71,10 @@ const Channel = ({user = null}) => {
               )
               ?.map(message => (
                 <li key={message.id} className="list-inline">
-                  <Message {...message} />
+                  {console.log(message.id)}
+                  <Message {...message} id={message.id}/>
+                 
+                  
                 </li>
               ))}
             </ul>
