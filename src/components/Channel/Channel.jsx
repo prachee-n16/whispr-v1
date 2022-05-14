@@ -3,6 +3,8 @@ import firebase from "firebase/compat/app";
 import Message from "../Message/Message";
 import { useFirestoreQuery } from '../../hooks';
 
+import axios from 'axios';
+
 import './Channel.scss'
 const Channel = ({user = null}) => {
     const db = firebase.firestore();
@@ -14,11 +16,67 @@ const Channel = ({user = null}) => {
         messagesRef.orderBy('createdAt', 'desc').limit(100)
       );
 
+      // Input text
     const [newMessage, setNewMessage] = useState('');
+
+    const [detectLanguageKey, setdetectedLanguageKey] = useState('en');
+    const [selectedLanguageKey, setLanguageKey] = useState('');
+    const [languagesList, setLanguagesList] = useState([])
+
+    const [resultMessage, setResultMessage] = useState('');
+
     const { uid, displayName, photoURL, message_id } = user;
 
     const inputRef = useRef();
     const bottomListRef = useRef();
+
+    const getLanguageSource = () => { 
+      try
+      {axios.post('https://libretranslate.de/detect', {
+        q: newMessage
+      })
+      .then((response) => {
+        setdetectedLanguageKey(response.data[0].language)
+      })
+    } 
+      
+      catch (err) {
+        console.log(err)
+      }
+    }
+
+    useEffect(() => {
+      try
+      {axios.get(`https://libretranslate.de/languages`)
+      .then((response) => 
+        {setLanguagesList(response.data)}
+      )}
+      catch (err) {
+        console.log(err)
+      }
+    }, [])
+
+    const languageKey = (selectedLanguage) => {
+      setLanguageKey(selectedLanguage.target.value)
+    }
+
+
+    const translateText = () => {
+      getLanguageSource();
+      let data = {
+        q: newMessage,
+        source: detectLanguageKey,
+        target: selectedLanguageKey
+      }
+      try
+      {axios.post(`https://libretranslate.de/translate`, data)
+      .then((response) => {
+        setResultMessage(response.data.translatedText)
+      })}
+      catch(err) {
+        console.log(err)
+      }
+    }
 
     useEffect(() => {
         // subscribe to query with onSnapshot
@@ -41,12 +99,14 @@ const Channel = ({user = null}) => {
 
     const handleOnChange = e => {
       setNewMessage(e.target.value);
-  }
+    }
 
     const handleOnSubmit = e => {
         e.preventDefault();
 
-        const trimmedMessage = newMessage.trim();
+        var num = translateText();
+
+        const trimmedMessage = resultMessage.trim();
         if (trimmedMessage) {
             messagesRef.add({
                 text: trimmedMessage,
@@ -72,7 +132,6 @@ const Channel = ({user = null}) => {
               ?.map(message => (
                 <li key={message.id} className="list-inline">
                   <Message {...message} id={message.id}/>
-                  {console.log(message)}
                 </li>
               ))}
             </ul>
@@ -81,15 +140,26 @@ const Channel = ({user = null}) => {
 
             <form onSubmit={handleOnSubmit} className="mx-5 fixed-bottom bg-light pb-3 mt-5">
               <div className="input-group mb-3">
+                  
+                <select className="language-select" onChange={languageKey}>
+                  {languagesList.map((language) => {
+                    return(
+                      <option key = {language.code} className="dropdown-item" href='#' value={language.code}>{language.name}</option>
+                    )
+                  })}
+                </select>
+
                 <input
                       ref={inputRef}
                       type="text"
                       value={newMessage}
                       onChange={handleOnChange}
-                      className="form-control ml-5 mr-1"
+                      className="form-control ml-1 mr-1"
                       placeholder = "Type your message here..."
-                  />
-                  <button 
+                  >
+                </input>
+
+                <button 
                     type="submit"
                     disabled={!newMessage}
                     className="btn btn-dark mr-5"
