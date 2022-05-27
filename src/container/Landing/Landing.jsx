@@ -58,7 +58,7 @@ const Landing = () => {
             <form style={{width: "23rem"}}>
   
               <h3 class="fw-normal mt-1 fw-bold" style={{letterSpacing: "1px"}}>Welcome Back!</h3>
-              <p className='fw-normal mb-3 pb-3'>Lorem Ipsum dior sit amet. Tretor fret nit cot deter.</p>
+              <p className='fw-normal mb-3 pb-3'>Whispr provides  in-app translation features that enables for real-time multilingual communication.</p>
               <div class="form-outline mb-4">
                 <label class="form-label" for="form2Example18">Email address</label>
                 <input type="email" id="form2Example18" class="form-control form-control-lg" />
@@ -81,7 +81,7 @@ const Landing = () => {
 
               <Button onClick = {SignInGoogle}>Sign in with Google</Button>
 
-              <p>Don't have an account? <a href="#!" class="link-info">Register here</a></p>
+              {/* <p>Don't have an account? <a href="#!" class="link-info">Register here</a></p> */}
   
             </form>
   

@@ -20,7 +20,7 @@ const Channel = ({user = null}) => {
     const [newMessage, setNewMessage] = useState('');
 
     const [detectLanguageKey, setdetectedLanguageKey] = useState('en');
-    const [selectedLanguageKey, setLanguageKey] = useState('');
+    const [selectedLanguageKey, setLanguageKey] = useState('en');
     const [languagesList, setLanguagesList] = useState([])
 
     const [resultMessage, setResultMessage] = useState('');
@@ -30,6 +30,7 @@ const Channel = ({user = null}) => {
     const inputRef = useRef();
     const bottomListRef = useRef();
 
+    // Which language is the user typing in?
     const getLanguageSource = () => { 
       try
       {axios.post('https://libretranslate.de/detect', {
@@ -56,11 +57,12 @@ const Channel = ({user = null}) => {
       }
     }, [])
 
+    // Set target language
     const languageKey = (selectedLanguage) => {
       setLanguageKey(selectedLanguage.target.value)
     }
 
-
+    // translate message
     const translateText = () => {
       getLanguageSource();
       let data = {
@@ -104,8 +106,8 @@ const Channel = ({user = null}) => {
     const handleOnSubmit = e => {
         e.preventDefault();
 
-        var num = translateText();
-
+        translateText();
+        
         const trimmedMessage = resultMessage.trim();
         if (trimmedMessage) {
             messagesRef.add({
@@ -117,10 +119,13 @@ const Channel = ({user = null}) => {
             });
 
             setNewMessage('');
-            bottomListRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
+    const scrollToBottom = () => {
+      bottomListRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    useEffect(scrollToBottom, [messages])
 
     return (
         <>
@@ -134,9 +139,12 @@ const Channel = ({user = null}) => {
                   <Message {...message} id={message.id}/>
                 </li>
               ))}
+              <div ref={bottomListRef}></div>
             </ul>
+            
+
             <div className="mb-4 text-light">iiii</div>
-            <div ref={bottomListRef} />
+            
 
             <form onSubmit={handleOnSubmit} className="mx-5 fixed-bottom bg-light pb-3 mt-5">
               <div className="input-group mb-3">
@@ -156,7 +164,7 @@ const Channel = ({user = null}) => {
                       onChange={handleOnChange}
                       className="form-control ml-1 mr-1"
                       placeholder = "Type your message here..."
-                  >
+                >
                 </input>
 
                 <button 
@@ -167,8 +175,6 @@ const Channel = ({user = null}) => {
                       Send
                   </button>
               </div>
-                
-                
             </form>
         </>
     );

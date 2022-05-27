@@ -78,13 +78,11 @@ function App() {
       {
         user ? (
           <>
-            <nav className="navbar navbar-light bg-light">
+            <nav className="navbar navbar-light bg-light sticky-top">
               <span className="navbar-brand mb-0 h4 fw-bold px-4">whispr.</span>
               <div className='d-flex justify-content-end'>
                 <SignOutButton onClick={SignOutGoogle}>Sign Out</SignOutButton>
-                <button onClick={() => setDarkMode(prev => !prev)} className='d-flex justify-content-center align-items-center btn btn-dark py-2 px-2'>
-                  <ThemeIcon/>
-                </button>
+                
               </div>
             </nav>
             <Chat/>
