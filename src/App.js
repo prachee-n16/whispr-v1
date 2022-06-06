@@ -77,17 +77,31 @@ function App() {
       {/* Log in/Log out component */}
       {
         user ? (
-          <>
-            <nav className="navbar navbar-light bg-light sticky-top">
+          <div className={darkMode ? "bg-light text-dark" : "bg-dark text-light"}>
+            <nav className= {darkMode ? "navbar navbar-light bg-light sticky-top mb-5" : "navbar navbar-dark bg-dark sticky-top mb-5"}>
               <span className="navbar-brand mb-0 h4 fw-bold px-4">whispr.</span>
               <div className='d-flex justify-content-end'>
-                <SignOutButton onClick={SignOutGoogle}>Sign Out</SignOutButton>
-                
+                {/* <SignOutButton onClick={SignOutGoogle}>Sign Out</SignOutButton> */}
+                <button onClick={SignOutGoogle} className={darkMode ? "btn btn-outline-dark mx-3 px-2 pt-1 pb-1 my-sm-0" : "btn btn-outline-light mx-3 px-2 pt-1 pb-1 my-sm-0"} type='submit'>
+                    Sign Out
+                </button>
+                <button onClick={() => setDarkMode(prev => !prev)} className =
+                  {darkMode ? 
+                  'd-flex justify-content-center align-items-center btn btn-outline-dark py-2 px-2'
+                  :
+                  'd-flex justify-content-center align-items-center btn btn-outline-light py-2 px-2'}
+                  >
+                  <ThemeIcon/>
+                </button>
               </div>
             </nav>
-            <Chat/>
-            <Channel user={user} />
-          </>
+            <div className= {darkMode ? "bg-light text-dark" : "bg-dark text-light"}>
+                <h3 className="display-3 text-center ">Welcome back!</h3>
+                <p className="text-muted text-center">This is the beginning of this chat.</p>
+                <hr className='text-muted mb-5'></hr>
+            </div>
+            <Channel user={user} darkMode = {darkMode} />
+          </div>
         )
        : <div>
           <Landing/>

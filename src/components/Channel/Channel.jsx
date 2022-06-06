@@ -6,7 +6,7 @@ import { useFirestoreQuery } from '../../hooks';
 import axios from 'axios';
 
 import './Channel.scss'
-const Channel = ({user = null}) => {
+const Channel = ({user = null, darkMode = null}) => {
     const db = firebase.firestore();
     const query = db.collection('messages').orderBy('createdAt').limit(100);
     const [docs, setDocs] = useState([]);
@@ -20,7 +20,7 @@ const Channel = ({user = null}) => {
     const [newMessage, setNewMessage] = useState('');
 
     const [detectLanguageKey, setdetectedLanguageKey] = useState('en');
-    const [selectedLanguageKey, setLanguageKey] = useState('en');
+    const [selectedLanguageKey, setLanguageKey] = useState('');
     const [languagesList, setLanguagesList] = useState([])
 
     const [resultMessage, setResultMessage] = useState('');
@@ -31,6 +31,8 @@ const Channel = ({user = null}) => {
     const bottomListRef = useRef();
 
     const getLanguageSource = () => { 
+      setdetectedLanguageKey('');
+
       try
       {axios.post('https://libretranslate.de/detect', {
         q: newMessage
@@ -38,7 +40,8 @@ const Channel = ({user = null}) => {
       .then((response) => {
         setdetectedLanguageKey(response.data[0].language)
       })
-    }
+    } 
+      
       catch (err) {
         console.log(err)
       }
@@ -57,12 +60,13 @@ const Channel = ({user = null}) => {
 
     const languageKey = (selectedLanguage) => {
       setLanguageKey(selectedLanguage.target.value)
-      console.log(setLanguageKey);
     }
-
 
     const translateText = () => {
       getLanguageSource();
+    }
+
+    useEffect(() => {
       let data = {
         q: newMessage,
         source: detectLanguageKey,
@@ -76,7 +80,7 @@ const Channel = ({user = null}) => {
       catch(err) {
         console.log(err)
       }
-    }
+    }, [newMessage])
 
     useEffect(() => {
         // subscribe to query with onSnapshot
@@ -107,7 +111,6 @@ const Channel = ({user = null}) => {
         var num = translateText();
 
         const trimmedMessage = resultMessage.trim();
-        
         if (trimmedMessage) {
             messagesRef.add({
                 text: trimmedMessage,
@@ -122,29 +125,29 @@ const Channel = ({user = null}) => {
         }
     }
 
-
     return (
-        <>
-            <ul>
+        <div className={darkMode ? "bg-light text-dark" : "bg-dark text-light"}>
+            <ul className={darkMode ? "" : "bg-dark"}>
             {messages
               ?.sort((first, second) =>
                 first?.createdAt?.seconds <= second?.createdAt?.seconds ? -1 : 1
               )
               ?.map(message => (
                 <li key={message.id} className="list-inline">
-                  <Message {...message} id={message.id}/>
+                  <Message {...message} id={message.id} darkMode = {darkMode}/>
                 </li>
               ))}
             </ul>
-            <div className="mb-4 text-light">iiii</div>
-            <div ref={bottomListRef} />
+            <div className={darkMode ? "mb-4 text-light" : "pb-4 bg-dark text-dark"}>iiii</div>
+            <div className = {darkMode ? "" : "bg-dark"} ref={bottomListRef} />
 
-            <form onSubmit={handleOnSubmit} className="mx-5 fixed-bottom bg-light pb-3 mt-5">
+            <form onSubmit={handleOnSubmit} className={darkMode ? "mx-5 fixed-bottom bg-light pb-3 mt-5" : "mx-5 fixed-bottom bg-dark pb-3 mt-5"}>
               <div className="input-group mb-3">
-                <select className="language-select" onChange={languageKey}>
+                  
+                <select className={darkMode ? "language-select" : "language-select bg-dark text-light"} onChange={languageKey}>
                   {languagesList.map((language) => {
                     return(
-                      <option key = {language.code} className="dropdown-item" href='#' value={language.code}>{language.name}</option>
+                      <option key = {language.code} className={darkMode ? "dropdown-item" : "bg-dark text-light dropdown-item"} href='#' value={language.code}>{language.name}</option>
                     )
                   })}
                 </select>
@@ -154,7 +157,7 @@ const Channel = ({user = null}) => {
                       type="text"
                       value={newMessage}
                       onChange={handleOnChange}
-                      className="form-control ml-1 mr-1"
+                      className= {darkMode ? "form-control ml-1 mr-1 text-dark" : "form-control ml-1 mr-1 text-light bg-dark"}
                       placeholder = "Type your message here..."
                   >
                 </input>
@@ -162,13 +165,15 @@ const Channel = ({user = null}) => {
                 <button 
                     type="submit"
                     disabled={!newMessage}
-                    className="btn btn-dark mr-5"
+                    className={darkMode ? "btn btn-dark mr-5" : "btn btn-outline-light mr-5"}
                     >
                       Send
                   </button>
               </div>
+                
+                
             </form>
-        </>
+        </div>
     );
 }
 

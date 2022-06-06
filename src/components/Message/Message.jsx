@@ -1,11 +1,14 @@
 import React from 'react'
 import { formatRelative } from 'date-fns';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import './Message.scss'
 import { doc, updateDoc, deleteField } from "firebase/firestore";
+
+import axios from 'axios';
+
 
 var updateMessage = '';
 
@@ -31,12 +34,12 @@ const Message = ({
         displayName = '',
         photoURL = '',
         id = '',
-        uid = ''
+        uid = '',
+        darkMode = null
     }) => {
         var message_id = id;
-        
+
         if (!text) return null;
-        
 
         function handleDelete(e, id) {
             var docRef = firebase.firestore().collection("messages").doc(selectedId.toString());
@@ -62,9 +65,9 @@ const Message = ({
 
     return (
         <div>
-            <div className='container'>
-                <div className='row mb-3'>
-                    <div className='col-1'>
+            <div className={darkMode ? 'container' : 'container bg-dark text-light'}>
+                <div className={darkMode ? 'row mb-3' : 'row mb-3 bg-dark'}>
+                    <div className={darkMode ? 'col-1' : 'col-1 bg-dark'}>
                         {photoURL ? (
                             <img
                             className="rounded rounded-circle d-block"
@@ -84,7 +87,7 @@ const Message = ({
                         ) : null}
                         
                         <div class="position-relative top-0 float-end pb-5 dropdown dropleft">
-                            <button class="btn btn-outline-light text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button className={darkMode ? "btn btn-outline-light text-dark" : "btn btn-outline-dark text-light"} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i className="bi bi-three-dots-vertical"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -104,8 +107,8 @@ const Message = ({
 
             
             <div class="modal fade" id={"deleteModal"} tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+                <div class={darkMode ? "modal-dialog" : "modal-dialog bg-dark text-light"} role="document">
+                    <div class={darkMode ? "modal-content" : "modal-content bg-dark text-light"}>
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -123,9 +126,9 @@ const Message = ({
                 </div>
             </div>
 
-            <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+            <div className="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class={darkMode ? "modal-dialog" : "modal-dialog bg-dark text-light"} role="document">
+                    <div class={darkMode ? "modal-content" : "modal-content bg-dark text-light"}>
                         <div class="modal-header">
                             <h5 class="modal-title" id="updateModalLabel">Update</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -133,11 +136,11 @@ const Message = ({
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="input-group input-group-sm mb-3">
+                            <div class={darkMode ? "input-group input-group-sm mb-3" : "input-group input-group-sm mb-3 bg-dark text-light"}>
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroup-sizing-sm">@{selectedName}</span>
                             </div>
-                            <input type="text" placeholder="Type your message here..." class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(evt) => {updateMessage=evt.target.value;}}/>
+                            <textarea placeholder="Type your message here..." class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={(evt) => {updateMessage=evt.target.value;}}/>
                             </div>
                         </div>
                         <div class="modal-footer">
